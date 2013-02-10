@@ -78,7 +78,7 @@ function coinbase_button_request($invoiceid, $amount, $currency, $description, $
   $price       = $button['price']['cents'];
   $currency    = $button['price']['currency_iso'];
 
-  $code = '<a class="coinbase-button" data-code="'.$button_code.'" data-button-style="'.$style.'" data-button-text="'.$text.'" data-custom="'.$invoice_id.'" href="https://coinbase.com/checkouts/'.$button_code.'">Pay With Bitcoin</a><script src="https://coinbase.com/assets/button.js" type="text/javascript"></script>';
+  $code = '<a class="coinbase-button" data-code="'.$button_code.'" data-button-style="'.$style.'" data-button-text="'.$text.'" data-custom="'.$invoice_id.'" href="https://coinbase.com/checkouts/'.$button_code.'">'.$text.'</a><script src="https://coinbase.com/assets/button.js" type="text/javascript"></script>';
 
   return $code;
 
