@@ -12,13 +12,13 @@ include("../../../includes/gatewayfunctions.php");
 include("../../../includes/invoicefunctions.php");
 
 $gatewaymodule = "coinbase"; # Enter your gateway module name here replacing template
-$adminuser = 'admin';
 
 $GATEWAY = getGatewayVariables($gatewaymodule);
 if (!$GATEWAY["type"]) die("Module Not Activated"); # Checks gateway module is active before accepting callback
 
 # Get Returned Variables - Adjust for Post Variable Names from your Gateway's Documentation
 
+$adminuser = $GATEWAY['whmcs_admin_username'];
 $secret_key = $GATEWAY['callback_secret'];
 $provided_secret = $_GET['secret'];
 if ($provided_secret != $secret_key) {

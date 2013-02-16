@@ -8,6 +8,7 @@
 function coinbase_config() {
   $configarray = array(
     "FriendlyName" => array("Type" => "System", "Value"=>"Coinbase (Bitcoin)"),
+    "whmcs_admin_username" => array("FriendlyName" => "WHMCS Admin User Name", "Type" => "text", "Size" => "20", "Description" => "Need an admin user name to use the local API, usually it's just 'admin'.", ),
     "coinbase_api_key" => array("FriendlyName" => "Coinbase API Key", "Type" => "password", "Size" => "70", ),
     "coinbase_type" => array("FriendlyName" => "Coinbase Button Type", "Type" => "dropdown", "Options" => "buy_now,donation,subscription", "Description" => "Subscription type is not yet available.", ),
     "coinbase_style" => array("FriendlyName" => "Coinbase Button Style", "Type" => "dropdown", "Options" => "buy_now_small,buy_now_large,donation_small,donation_large,custom_small,custom_large", ),
