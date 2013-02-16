@@ -86,6 +86,7 @@ function coinbase_button_request($invoiceid, $amount, $currency, $description, $
 
 function coinbase_post_json($url, $button_data) {
 
+  $ca_coinbase_path = getcwd() . '/coinbase/ca-coinbase.crt';
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
@@ -93,8 +94,9 @@ function coinbase_post_json($url, $button_data) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 30);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($button_data));
-  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+  curl_setopt($ch, CURLOPT_CAINFO, $ca_coinbase_path);
   $response_data = curl_exec($ch);
   if (curl_error($ch)) die("Connection Error: ".curl_errno($ch).' - '.curl_error($ch));
   curl_close($ch);

@@ -8,7 +8,7 @@ A payment gateway module for WHMCS and Coinbase's bitcoin payment API.
 To Do
 ======================
 
-- [] Verify SSL connection to Coinbase API with cURL.
+- [x] Verify SSL connection to Coinbase API with cURL.
 - [] WHMCS 'admin' username is hardcoded in callbacks/coinbase.php (line 15). Make that less brittle/more flexible.
 - [] Enable a mechanism for refunds.
 - [] ...
