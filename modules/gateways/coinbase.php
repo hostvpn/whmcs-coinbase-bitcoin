@@ -87,7 +87,7 @@ function coinbase_button_request($invoiceid, $amount, $currency, $description, $
 
 function coinbase_post_json($url, $button_data) {
 
-  $ca_coinbase_path = getcwd() . '/modules/gateways/coinbase/ca-coinbase.crt';
+  $ca_coinbase_path = getcwd() . '/coinbase/ca-coinbase.crt';
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
