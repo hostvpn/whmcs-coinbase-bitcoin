@@ -10,8 +10,8 @@ To Do
 
 - [x] Verify SSL connection to Coinbase API with cURL.
 - [x] WHMCS 'admin' username is hardcoded in callbacks/coinbase.php (line 15). Make that less brittle/more flexible.
+- [x] Additional error checking in 'callbacks/coinbase.php'
 - [] Enable a mechanism for refunds.
-- [] Additional error checking in 'callbacks/coinbase.php'
 - [] ...
 
 
