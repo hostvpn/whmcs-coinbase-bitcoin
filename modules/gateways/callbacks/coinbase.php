@@ -46,31 +46,30 @@ $invoice_id = checkCbInvoiceID($invoice_id,$GATEWAY["name"]); # Checks invoice I
 checkCbTransID($trans_id); # Checks transaction number isn't already in the database and ends processing if it does
 
 if ($status=="completed") {
+
   # Successful
-  #
   # http://docs.whmcs.com/API:Update_Invoice - add BTC currency conversion in invoice notes
   $command = "updateinvoice";
   $values["invoiceid"] = $invoice_id; #changeme
   $values["notes"] = "BTC:{$total_btc_cents};USD:{$total_native_cents};"; #changeme
   $results = localAPI($command,$values,$adminuser);
-  
   addInvoicePayment($invoice_id,$trans_id,$amount,$fee,$gatewaymodule); # Apply Payment to Invoice: invoiceid, transactionid, amount paid, fees, modulename
-  
   logTransaction($GATEWAY["name"],$json,"Successful"); # Save to Gateway Log: name, data array, status
-} elseif ($status=="canceled") {
-  # Canceled
 
+} elseif ($status=="canceled") {
+
+  # Canceled
   $command = "updateinvoice";
   $values["invoiceid"] = $invoice_id; #changeme
   $values["status"] = "Unpaid";
-  // $values["datepaid"] = ''; yyyymmdd
-  // $values["notes"] = "BTC:{$total_native_cents};USD:{$total_native_cents};"; #changeme
   $results = localAPI($command,$values,$adminuser);
-
   logTransaction($GATEWAY["name"],$json,"Canceled"); # Save to Gateway Log: name, data array, status
+
 } else {
+
   # Unsuccessful
   logTransaction($GATEWAY["name"],$json,"Unsuccessful"); # Save to Gateway Log: name, data array, status
+
 }
 
 ?>

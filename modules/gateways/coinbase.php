@@ -13,6 +13,7 @@ function coinbase_config() {
     "coinbase_type" => array("FriendlyName" => "Coinbase Button Type", "Type" => "dropdown", "Options" => "buy_now,donation,subscription", "Description" => "Subscription type is not yet available.", ),
     "coinbase_style" => array("FriendlyName" => "Coinbase Button Style", "Type" => "dropdown", "Options" => "buy_now_small,buy_now_large,donation_small,donation_large,custom_small,custom_large", ),
     "coinbase_text" => array("FriendlyName" => "Coinbase Button Text", "Type" => "text", "Size" => "70", "Description" => "<br />This is the text that will appear on your button (e.g. 'Pay with Bitcoin')." ),
+    "coinbase_ca_path" => array("FriendlyName" => "Coinbase CA Cert Path", "Type" => "text", "Size" => "70", "Description" =>"<br />This should be the full directory path to the ca-coinbase.crt file" ),
     "callback_secret" => array("FriendlyName" => "Coinbase Callback Secret", "Type" => "text", "Size" => "70", "Description" => "<br />Secret key will be appended to the end of your callback URL (e.g. https://yourdomain/modules/gateways/callback/coinbase.php?secret=) which you will need to provide to Coinbase so they can notify WHMCS of payments." ),
   );
   return $configarray;
@@ -26,6 +27,7 @@ function coinbase_link($params) {
   $type     = $params['coinbase_type'];
   $style    = $params['coinbase_style'];
   $text     = $params['coinbase_text'];
+  $ca_path  = $params['coinbase_ca_path'];
   
   # Invoice Variables
   $invoiceid    = $params['invoiceid'];
@@ -50,13 +52,62 @@ function coinbase_link($params) {
   $systemurl   = $params['systemurl'];
   $currency    = $params['currency'];
 
-  $code = coinbase_button_request($invoiceid, $amount, $currency, $description, $type, $style, $text, $url);
+  $code = coinbase_button_request($invoiceid, $amount, $currency, $description, $type, $style, $text, $url, $ca_path);
 
   return $code;
 
 }
 
-function coinbase_button_request($invoiceid, $amount, $currency, $description, $type, $style, $text, $url) {
+// Are refunds pratical? You would need to ask the user for their wallet address, otherwise you might refund the payment back to an online wallet or some other intermediary service.
+/*function coinbase_refund($params) {
+
+  # Gateway Specific Variables
+  $api_key  = $params['coinbase_api_key'];
+  $url      = 'https://coinbase.com/api/v1/buttons?api_key=' . $api_key;
+
+  # Invoice Variables
+  $transid      = $params['transid'];
+  $invoiceid    = $params['invoiceid'];
+  $description  = $params["description"];
+  $amount       = $params['amount']; # Format: ##.##
+  $currency     = $params['currency']; # Currency Code
+
+    # Client Variables
+  $firstname = $params['clientdetails']['firstname'];
+  $lastname = $params['clientdetails']['lastname'];
+  $email = $params['clientdetails']['email'];
+  $address1 = $params['clientdetails']['address1'];
+  $address2 = $params['clientdetails']['address2'];
+  $city = $params['clientdetails']['city'];
+  $state = $params['clientdetails']['state'];
+  $postcode = $params['clientdetails']['postcode'];
+  $country = $params['clientdetails']['country'];
+  $phone = $params['clientdetails']['phonenumber'];
+
+  # Card Details
+  $cardtype = $params['cardtype'];
+  $cardnumber = $params['cardnum'];
+  $cardexpiry = $params['cardexp']; # Format: MMYY
+  $cardstart = $params['cardstart']; # Format: MMYY
+  $cardissuenum = $params['cardissuenum'];
+
+  # Perform Refund Here & Generate $results Array, eg:
+  $results = array();
+  $results["status"] = "success";
+    $results["transid"] = "12345";
+
+  # Return Results
+  if ($results["status"]=="success") {
+    return array("status"=>"success","transid"=>$results["transid"],"rawdata"=>$results);
+  } elseif ($gatewayresult=="declined") {
+        return array("status"=>"declined","rawdata"=>$results);
+    } else {
+    return array("status"=>"error","rawdata"=>$results);
+  }
+
+}*/
+
+function coinbase_button_request($invoiceid, $amount, $currency, $description, $type, $style, $text, $url, $ca_path) {
 
   $button_data = array(
     'button'=>array(
@@ -69,7 +120,7 @@ function coinbase_button_request($invoiceid, $amount, $currency, $description, $
       'style'=>$style),
     );
 
-  $button_response = coinbase_post_json($url, $button_data);
+  $button_response = coinbase_post_json($url, $button_data, $ca_path);
 
   $button      = $button_response['button'];
   $button_code = $button['code'];
@@ -85,9 +136,9 @@ function coinbase_button_request($invoiceid, $amount, $currency, $description, $
 
 }
 
-function coinbase_post_json($url, $button_data) {
+function coinbase_post_json($url, $button_data, $ca_path) {
 
-  $ca_coinbase_path = getcwd() . '/coinbase/ca-coinbase.crt';
+  //$ca_coinbase_path = getcwd() . '/coinbase/ca-coinbase.crt';
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
@@ -97,18 +148,16 @@ function coinbase_post_json($url, $button_data) {
   curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($button_data));
   curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
   curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-  curl_setopt($ch, CURLOPT_CAINFO, $ca_coinbase_path);
+  curl_setopt($ch, CURLOPT_CAINFO, $ca_path);
   $response_data = curl_exec($ch);
   if (curl_error($ch)) die("Connection Error: ".curl_errno($ch).' - '.curl_error($ch));
   curl_close($ch);
 
   $button_response = json_decode($response_data, true);
 
-  if ($button_response['success'] != 'true') {
-    die("API Request failed.");
+  if ($button_response['success'] == 'true') {
+    return $button_response;
   }
-
-  return $button_response;
 
 }
 
