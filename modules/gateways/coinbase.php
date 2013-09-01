@@ -13,7 +13,7 @@ function coinbase_config() {
     "coinbase_type" => array("FriendlyName" => "Coinbase Button Type", "Type" => "dropdown", "Options" => "buy_now,donation,subscription", "Description" => "Subscription type is not yet available.", ),
     "coinbase_style" => array("FriendlyName" => "Coinbase Button Style", "Type" => "dropdown", "Options" => "buy_now_small,buy_now_large,donation_small,donation_large,custom_small,custom_large", ),
     "coinbase_text" => array("FriendlyName" => "Coinbase Button Text", "Type" => "text", "Size" => "70", "Description" => "<br />This is the text that will appear on your button (e.g. 'Pay with Bitcoin')." ),
-    "coinbase_ca_path" => array("FriendlyName" => "Coinbase CA Cert Path", "Type" => "text", "Size" => "70", "Description" =>"<br />This should be the full directory path to the ca-coinbase.crt file" ),
+    "coinbase_ca_path" => array("FriendlyName" => "Coinbase CA Cert Path", "Type" => "text", "Size" => "70", "Description" =>"<br />This should be the full directory path to the ca-coinbase.crt file (e.g. /home/username/public_html/whmcs/modules/gateways/coinbase/ca-coinbase.crt)." ),
     "callback_secret" => array("FriendlyName" => "Coinbase Callback Secret", "Type" => "text", "Size" => "70", "Description" => "<br />Secret key will be appended to the end of your callback URL (e.g. https://yourdomain/modules/gateways/callback/coinbase.php?secret=) which you will need to provide to Coinbase so they can notify WHMCS of payments." ),
   );
   return $configarray;
