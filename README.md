@@ -12,7 +12,7 @@ How To Install
   Payment Gateways.
 - Select this module ("Coinbase (Bitcoin)") from the drop-down select box, and then click the Activate button to the right of it.
 - On this same page, you can now configure the module, mainly you'll want to pay close attention to these items:
-  - **Coinbas API Key** - This is generated from within Coinbase, keep this private
+  - **Coinbase API Key** - This is generated from within Coinbase, keep this private
   - **Coinbase CA Cert Path** - This will be the path where the ca-coinbase.crt is.
   - **Coinbase Callback Secret** - Generate a long and random string and input it in this field. Provide this to Coinbase on the backend. This is used to authenticate their callback.
 - Save your changes when you're done configuring.  It's probably a smart idea to do a test transaction.
