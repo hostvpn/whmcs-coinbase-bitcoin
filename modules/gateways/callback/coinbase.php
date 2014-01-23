@@ -53,7 +53,14 @@ if ($status=="completed") {
   $values["invoiceid"] = $invoice_id; #changeme
   $values["notes"] = "BTC:{$total_btc_cents};USD:{$total_native_cents};"; #changeme
   $results = localAPI($command,$values,$adminuser);
-  addInvoicePayment($invoice_id,$trans_id,$amount,$fee,$gatewaymodule); # Apply Payment to Invoice: invoiceid, transactionid, amount paid, fees, modulename
+  //addInvoicePayment($invoice_id,$trans_id,$amount,$fee,$gatewaymodule); # Apply Payment to Invoice: invoiceid, transactionid, amount paid, fees, modulename
+  $command = "addinvoicepayment";
+  $values["invoiceid"] = $invoice_id;
+  $values["transid"] = $trans_id;
+  $values["amount"] = $amount;
+  $values["fee"] = $fee;
+  $values["gateway"] = $GATEWAY['name'];
+  $results = localAPI($command,$values,$adminuser);
   logTransaction($GATEWAY["name"],$json,"Successful"); # Save to Gateway Log: name, data array, status
 
 } elseif ($status=="canceled") {
